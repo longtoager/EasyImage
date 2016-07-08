@@ -270,12 +270,16 @@ public class EasyImage implements EasyImageConfig {
         }
     }
 
-    public static boolean willHandleActivityResult(int requestCode, int resultCode, Intent data) { 
+
+    public static boolean willHandleActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EasyImageConfig.REQ_SOURCE_CHOOSER || requestCode == EasyImageConfig.REQ_PICK_PICTURE_FROM_GALLERY || requestCode == EasyImageConfig.REQ_TAKE_PICTURE || requestCode == EasyImageConfig.REQ_PICK_PICTURE_FROM_DOCUMENTS) {
-            return true; 
-        } 
+            return true;
+        }
         return false;
     }
+
+
+
 
     /**
      * @param context context
@@ -317,7 +321,10 @@ public class EasyImage implements EasyImageConfig {
     private static void onPictureReturnedFromCamera(Activity activity, Callbacks callbacks) {
         try {
             File photoFile = EasyImage.takenCameraPicture(activity);
-            callbacks.onImagePicked(photoFile, ImageSource.CAMERA, restoreType(activity));
+
+            File newPhotoFile = EasyImageUtils.getNewFile(activity, photoFile);
+            callbacks.onImagePicked(newPhotoFile, ImageSource.CAMERA, restoreType(activity));
+           // callbacks.onImagePicked(photoFile, ImageSource.CAMERA, restoreType(activity));
             PreferenceManager.getDefaultSharedPreferences(activity).edit().remove(KEY_LAST_CAMERA_PHOTO).commit();
         } catch (Exception e) {
             e.printStackTrace();
